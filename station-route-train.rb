@@ -100,7 +100,7 @@ class Train
   end
 
   def move_next_station
-    if route.stations.index(station) < route.stations.size
+    if route.stations.index(station) < route.stations.size - 1
       self.station = route.stations[route.stations.index(station) + 1]
     else puts "Train at the terminal station."
     end
