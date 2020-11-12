@@ -57,10 +57,7 @@ def create_train
     puts("Enter train number")
     number = gets.chomp
     @train = new.PassengerTrain(number)
-  else
-    main_interface
   end
-  main_interface
 end
 
 def create_routes_and_manage_stations_in_it
@@ -86,31 +83,32 @@ def create_routes_and_manage_stations_in_it
     puts("Enter station name")
     sta_name = gets.chomp
     @route.delete_station(sta_name)
-  else
-    main_interface
   end
-  main_interface
 end
 
 def assign_a_route_to_a_train
   @train.route(@route)
-  main_interface
 end
 
 def add_carriage_to_the_train
-  if @train.type == :cargo
+  if @train.type == :cargo && @train.speed == 0
     carriage = CargoCarriage.new(:cargo)
-  else
+    @train.add_carriage(carriage)
+    elsif @train.type == :passenger && @train.speed == 0
     carriage = PassengerCarriage.new(:passenger)
+    @train.add_carriage(carriage)
+  else
+    puts "You cannot add carriage while the train is moving"
   end
-  @train.add_carriage(carriage)
-  main_interface
 end
 
 def disconnect_wagons_from_the_train
-  carriage = @train.carriages.last
-  @train.remove_carriage(carriage)
-  main_interface
+  if @train.speed == 0
+    carriage = @train.carriages.last
+    @train.remove_carriage(carriage)
+  else
+    puts "You cannot remove carriage while the train is moving"
+  end
 end
 
 def move_the_train_along_the_route_forward_and_backward
@@ -119,23 +117,30 @@ def move_the_train_along_the_route_forward_and_backward
 1. Move forward
 2. Move back"
   )
-  option  = gets.chomp
+  option  = gets.chomp.to_i
   case option
   when 1
-    @train.move_next_station
+    if @train.move_next_station != -1
+      @train.move_next_station
+    else
+      puts "Train at the terminal station."
+    end
   when 2
+    if @train.move_previous_station != -1
     @train.move_previous_station
-  else
-    main_interface
+    else puts "Train at the initial station."
+    end
   end
-  main_interface
 end
 
 def view_station_list_and_train_list_at_station
   puts(
       "Select an action:
 1. View station list
-2. View train list at station"
+2. View train list at station
+3. View previous station
+4. View current station
+5. View next station"
   )
   option = gets.chomp
   case option
@@ -150,8 +155,19 @@ def view_station_list_and_train_list_at_station
       puts "Грузовые поезда:"
       station.trains_by_type(:cargo).each { |train| puts "Поезд: #{train.number}" }
     end
-  else
-    main_interface
+  when 3
+    if route.stations.index(@train.station) != 0
+      puts("The previous station is #{@train.previous_station}")
+    else
+      puts("Train at the initial station")
+    end
+  when 4
+    puts("The current station is #{@train.station}")
+  when 5
+    if route.stations.index(@train.station) < route.stations.size - 1
+      puts("The next station is #{@train.next_station}")
+    else
+      puts("Train at the terminal station")
+    end
 end
-main_interface
 end
