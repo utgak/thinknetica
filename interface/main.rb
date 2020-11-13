@@ -16,7 +16,8 @@ def main_interface
 4. Add wagons to the train
 5. Disconnect wagons from the train
 6. Move the train along the route forward and backward
-7. View station list and train list at station"
+7. View station list and train list at station
+8. Show the next previous or current station on the route"
   )
   loop do
     option = gets.chomp.to_i
@@ -35,6 +36,8 @@ def main_interface
       move_the_train_along_the_route_forward_and_backward
     when 7
       view_station_list_and_train_list_at_station
+    when 8
+      show_the_next_previous_or_current_station_on_the_route
     else
       exit(0)
     end
@@ -137,12 +140,9 @@ def view_station_list_and_train_list_at_station
   puts(
       "Select an action:
 1. View station list
-2. View train list at station
-3. View previous station
-4. View current station
-5. View next station"
+2. View train list at station"
   )
-  option = gets.chomp
+  option = gets.chomp.to_i
   case option
   when 1
     stations = Route.stations
@@ -155,19 +155,31 @@ def view_station_list_and_train_list_at_station
       puts "Грузовые поезда:"
       station.trains_by_type(:cargo).each { |train| puts "Поезд: #{train.number}" }
     end
-  when 3
-    if route.stations.index(@train.station) != 0
-      puts("The previous station is #{@train.previous_station}")
-    else
-      puts("Train at the initial station")
+  end
+
+  def show_the_next_previous_or_current_station_on_the_route
+    puts(
+        "Select an action:
+1. View previous station
+2. View current station
+3. View next station"
+    )
+    option = gets.chomp.to_i
+    case option
+    when 1
+      if route.stations.index(@train.station) != 0
+        puts("The previous station is #{@train.previous_station}")
+      else
+        puts("Train at the initial station")
+      end
+    when 2
+      puts("The current station is #{@train.station}")
+    when 3
+      if route.stations.index(@train.station) < route.stations.size - 1
+        puts("The next station is #{@train.next_station}")
+      else
+        puts("Train at the terminal station")
+      end
     end
-  when 4
-    puts("The current station is #{@train.station}")
-  when 5
-    if route.stations.index(@train.station) < route.stations.size - 1
-      puts("The next station is #{@train.next_station}")
-    else
-      puts("Train at the terminal station")
-    end
-end
+  end
 end
