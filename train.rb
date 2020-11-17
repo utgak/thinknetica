@@ -31,7 +31,7 @@ class Train
   end
 
   def add_carriage(carriage)
-    if self.speed == 0 && (self.type = carriage.type)
+    if self.speed == 0 && self.type == carriage.type
       carriages << carriage
     end
   end

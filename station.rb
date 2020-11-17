@@ -2,7 +2,6 @@ class Station
   attr_reader :name
   attr_reader :trains
 
-  @@stations
 
   def self.all
     @@stations
@@ -11,7 +10,7 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
-    @@stations += 1
+    @@stations = {name => self}
   end
 
   def get_train(train)
@@ -23,13 +22,7 @@ class Station
   end
 
   def trains_by_type(type)
-    train_type = []
-    self.trains.each do |train|
-      if train.type == type
-        train_type << train
-      end
-    end
-    train_type
+    trains.filter { |train| train.type == type }
   end
 end
 
