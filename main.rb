@@ -20,7 +20,8 @@ class Main
   5. Disconnect wagons from the train
   6. Move the train along the route forward and backward
   7. View station list and train list at station
-  8. Show the next previous or current station on the route"
+  8. Show the next previous or current station on the route
+  9. add_or_delete_stations"
     )
     loop do
       option = gets.chomp.to_i
@@ -28,7 +29,7 @@ class Main
       when 1
         create_train
       when 2
-        create_routes_and_manage_stations_in_it
+        create_route
       when 3
         assign_a_route_to_a_train
       when 4
@@ -41,11 +42,15 @@ class Main
         view_station_list_and_train_list_at_station
       when 8
         show_the_next_previous_or_current_station_on_the_route
+      when 9
+        add_or_delete_stations
       else
         exit(0)
       end
     end
   end
+
+  private
 
   def create_train
     puts(
@@ -66,13 +71,7 @@ class Main
     end
   end
 
-  def create_routes_and_manage_stations_in_it
-    puts(
-  "Select an action:
-  1. Create route
-  2. Add intermediate station
-  3. Delete station"
-    )
+  def create_route
     option = gets.chomp.to_i
     case option
     when 1
@@ -80,12 +79,31 @@ class Main
       start_station = gets.chomp
       puts("Enter finish station")
       finish_station = gets.chomp
-      @route = new.Route(start_station, finish_station)
+      @route = Route.new(start_station, finish_station)
     when 2
       puts("Enter station name")
       sta_name = gets.chomp
       @route.add_station(sta_name)
     when 3
+      puts("Enter station name")
+      sta_name = gets.chomp
+      @route.delete_station(sta_name)
+    end
+  end
+
+  def add_or_delete_stations
+    puts(
+        "Select an action:
+  1. Add intermediate station
+  2. Delete station"
+    )
+    option = gets.chomp.to_i
+    case option
+    when 1
+      puts("Enter station name")
+      sta_name = gets.chomp
+      @route.add_station(sta_name)
+    when 2
       puts("Enter station name")
       sta_name = gets.chomp
       @route.delete_station(sta_name)
@@ -133,8 +151,9 @@ class Main
       end
     when 2
       if @train.move_previous_station != -1
-      @train.move_previous_station
-      else puts "Train at the initial station."
+        @train.move_previous_station
+      else
+        puts "Train at the initial station."
       end
     end
   end
@@ -170,7 +189,7 @@ class Main
       option = gets.chomp.to_i
       case option
       when 1
-        if route.stations.index(@train.station) != 0
+        if @train.route.stations.index(@train.station) != 0
           puts("The previous station is #{@train.previous_station}")
         else
           puts("Train at the initial station")
@@ -178,7 +197,7 @@ class Main
       when 2
         puts("The current station is #{@train.station}")
       when 3
-        if route.stations.index(@train.station) < route.stations.size - 1
+        if @train.route.stations.index(@train.station) < @train.route.stations.size - 1
           puts("The next station is #{@train.next_station}")
         else
           puts("Train at the terminal station")
@@ -187,5 +206,6 @@ class Main
     end
   end
 end
+
 main = new.Main
 main.main_interface
