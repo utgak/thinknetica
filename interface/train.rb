@@ -1,12 +1,25 @@
+require_relative 'manufacturer.rb'
+require_relative 'instance_counter.rb'
+
 class Train
   attr_reader :number, :type, :route
   attr_accessor :station, :speed, :carriages
+
+  include InstanceCounter
+  include Manufacturer
+
+  @@trains = {}
 
   def initialize(number, type)
     @number = number
     @type = type
     @carriages = []
     @speed = 0
+    @@trains[number] = self
+  end
+
+  def self.find(number)
+    @@trains[number]
   end
 
   def raise_speed(speed)
@@ -18,7 +31,7 @@ class Train
   end
 
   def add_carriage(carriage)
-    if self.speed == 0 && (self.type = carriage.type)
+    if self.speed == 0 && self.type == carriage.type
       carriages << carriage
     end
   end
@@ -49,14 +62,16 @@ class Train
   def move_next_station
     if route.stations.index(station) < route.stations.size - 1
       self.station = next_station
-    else -1
+    else
+      false
     end
   end
 
   def move_previous_station
     if route.stations.index(station) != 0
       self.station = previous_station
-    else -1
+    else
+      false
     end
   end
 end
