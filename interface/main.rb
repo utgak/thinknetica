@@ -59,15 +59,25 @@ class Main
   2. Passenger train"
     )
     option = gets.chomp.to_i
-    case option
-    when 1
+    begin
+      test = false
       puts("Enter train number")
       number = gets.chomp
-      @train = new.CargoTrain(number)
-    when 2
-      puts("Enter train number")
-      number = gets.chomp
-      @train = new.PassengerTrain(number)
+      case option
+      when 1
+        @train = CargoTrain.new(number)
+      when 2
+        @train = PassengerTrain.new(number)
+      end
+      if @train.valid? == true
+        test = true
+      end
+      puts("Train successfully created")
+    rescue
+      if test == false
+        puts("Number has invalid format")
+        retry
+      end
     end
   end
 
@@ -207,5 +217,5 @@ class Main
   end
 end
 
-main = new.Main
+main = Main.new
 main.main_interface
