@@ -60,7 +60,6 @@ class Main
     )
     option = gets.chomp.to_i
     begin
-      test = false
       puts("Enter train number")
       number = gets.chomp
       case option
