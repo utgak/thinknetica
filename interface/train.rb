@@ -11,12 +11,12 @@ class Train
   @@trains = {}
 
   def initialize(number, type)
+    validate!
     @number = number
     @type = type
     @carriages = []
     @speed = 0
     @@trains[number] = self
-    validate!
   end
 
   NUMBER_FORMAT = /([a-z]|\d){3}-?([a-z]|\d){2}$/i
