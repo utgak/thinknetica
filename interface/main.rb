@@ -23,7 +23,8 @@ class Main
   8. Show the next previous or current station on the route
   9. Add or delete stations
   10. Show a list of train carriages
-  11. Show the list of trains at the station"
+  11. Show the list of trains at the station
+  12. fill the carriage"
     )
     loop do
       option = gets.chomp.to_i
@@ -50,6 +51,8 @@ class Main
         Show_a_list_of_train_carriages
       when 11
         Show the list of trains at the station
+      when 12
+        fill_the_cart
       else
         exit(0)
       end
@@ -57,6 +60,19 @@ class Main
   end
 
   private
+  
+  def fill_the_cart
+    if @train.type == :cargo
+      puts("Enter carriage number")
+      number = gets.chomp.to_i
+      puts("Enter the volume to fill")
+      volume = gets.chomp.to_i
+      @train.carriages[number].fill_the_space(volume)
+    else
+      puts("Enter carriage number")
+      number = gets.chomp.to_i
+      @train.carriages[number].fill_the_space
+  end
 
   def Show_a_list_of_train_carriages
     @train.each_carriage(Proc.new {|number,carriage| puts("Train number: #{number},
