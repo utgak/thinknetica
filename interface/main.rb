@@ -46,6 +46,10 @@ class Main
         show_the_next_previous_or_current_station_on_the_route
       when 9
         add_or_delete_stations
+      when 10
+        Show_a_list_of_train_carriages
+      when 11
+        Show the list of trains at the station
       else
         exit(0)
       end
