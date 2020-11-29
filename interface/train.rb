@@ -11,11 +11,26 @@ class Train
   @@trains = {}
 
   def initialize(number, type)
+    validate!
     @number = number
     @type = type
     @carriages = []
     @speed = 0
     @@trains[number] = self
+  end
+
+  NUMBER_FORMAT = /([a-z]|\d){3}-?([a-z]|\d){2}$/i
+
+  def validate!
+    raise "Number can't be nil" if @number.nil?
+    raise "Number has invalid format" if @number !~ NUMBER_FORMAT
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def self.find(number)

@@ -8,9 +8,21 @@ class Station
   end
 
   def initialize(name)
+    validate!
     @name = name
     @trains = []
     @@stations[name] = self
+  end
+
+  def validate!
+    raise "Name can't be nil" if @name.nil?
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def get_train(train)

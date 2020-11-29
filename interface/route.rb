@@ -6,7 +6,19 @@ class Route
   include InstanceCounter
 
   def initialize(start_station, finish_station)
+    validate!
     @stations = [start_station, finish_station]
+  end
+
+  def validate!
+    raise "Need to add 2 stations" if @stations.size < 2
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def add_station(station)
