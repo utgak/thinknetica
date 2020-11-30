@@ -23,6 +23,7 @@ class Train
 
   def each_carriage(block)
     return unless block_given?
+
     @carriages.each_pair do |number,carriage|
       block.call(number,carriage)
     end

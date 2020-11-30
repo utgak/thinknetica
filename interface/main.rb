@@ -47,10 +47,8 @@ class Main
         show_the_next_previous_or_current_station_on_the_route
       when 9
         add_or_delete_stations
-      when 10
-        Show_a_list_of_train_carriages
       when 11
-        Show the list of trains at the station
+        show_the_list_of_trains_at_the_station
       when 12
         fill_the_cart
       else
@@ -60,7 +58,7 @@ class Main
   end
 
   private
-  
+
   def fill_the_cart
     if @train.type == :cargo
       puts("Enter carriage number")
@@ -72,14 +70,15 @@ class Main
       puts("Enter carriage number")
       number = gets.chomp.to_i
       @train.carriages[number].fill_the_space
+    end
   end
 
-  def Show_a_list_of_train_carriages
+  def show_a_list_of_train_carriages
     @train.each_carriage(Proc.new {|number,carriage| puts("Train number: #{number},
     carriage type: #{carriage.type}, free space: #{carriage.free_space}, filled space: #{filled_space}")})
   end
 
-  def Show_the_list_of_trains_at_the_station
+  def show_the_list_of_trains_at_the_station
     @route.stations.each do |station|
       station.each_train(Proc.new {|train| puts("Train number: #{train.number},
       train type: #{train.type}, number of carriages #{train.carriages.size}")})
@@ -162,12 +161,12 @@ class Main
     if @train.type == :cargo && @train.speed == 0
       puts("Enter maximum volume")
       volume = gets.chomp.to_i
-      carriage = CargoCarriage.new(:cargo,volume)
+      carriage = CargoCarriage.new(volume)
       @train.add_carriage(carriage)
     elsif @train.type == :passenger && @train.speed == 0
       puts("Enter maximum space")
       space = gets.chomp.to_i
-      carriage = PassengerCarriage.new(:passenger,space)
+      carriage = PassengerCarriage.new(space)
       @train.add_carriage(carriage)
     else
       puts "You cannot add carriage while the train is moving"
@@ -258,3 +257,4 @@ end
 
 main = Main.new
 main.main_interface
+
