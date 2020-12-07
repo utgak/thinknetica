@@ -6,8 +6,8 @@ class Route
   include InstanceCounter
 
   def initialize(start_station, finish_station)
-    validate!
     @stations = [start_station, finish_station]
+    validate!
   end
 
   def validate!

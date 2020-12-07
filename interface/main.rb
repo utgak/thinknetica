@@ -21,7 +21,10 @@ class Main
   6. Move the train along the route forward and backward
   7. View station list and train list at station
   8. Show the next previous or current station on the route
-  9. add_or_delete_stations"
+  9. Add or delete stations
+  10. Show a list of train carriages
+  11. Show the list of trains at the station
+  12. fill the carriage"
     )
     loop do
       option = gets.chomp.to_i
@@ -44,6 +47,10 @@ class Main
         show_the_next_previous_or_current_station_on_the_route
       when 9
         add_or_delete_stations
+      when 11
+        show_the_list_of_trains_at_the_station
+      when 12
+        fill_the_cart
       else
         exit(0)
       end
@@ -51,6 +58,32 @@ class Main
   end
 
   private
+
+  def fill_the_cart
+    if @train.type == :cargo
+      puts("Enter carriage number")
+      number = gets.chomp.to_i
+      puts("Enter the volume to fill")
+      volume = gets.chomp.to_i
+      @train.carriages[number].fill_the_space(volume)
+    else
+      puts("Enter carriage number")
+      number = gets.chomp.to_i
+      @train.carriages[number].fill_the_space
+    end
+  end
+
+  def show_a_list_of_train_carriages
+    @train.each_carriage(Proc.new {|number,carriage| puts("Train number: #{number},
+    carriage type: #{carriage.type}, free space: #{carriage.free_space}, filled space: #{filled_space}")})
+  end
+
+  def show_the_list_of_trains_at_the_station
+    @route.stations.each do |station|
+      station.each_train(Proc.new {|train| puts("Train number: #{train.number},
+      train type: #{train.type}, number of carriages #{train.carriages.size}")})
+    end
+  end
 
   def create_train
     puts(
@@ -60,6 +93,7 @@ class Main
     )
     option = gets.chomp.to_i
     begin
+      test = false
       puts("Enter train number")
       number = gets.chomp
       case option
@@ -125,10 +159,14 @@ class Main
 
   def add_carriage_to_the_train
     if @train.type == :cargo && @train.speed == 0
-      carriage = CargoCarriage.new(:cargo)
+      puts("Enter maximum volume")
+      volume = gets.chomp.to_i
+      carriage = CargoCarriage.new(volume)
       @train.add_carriage(carriage)
-      elsif @train.type == :passenger && @train.speed == 0
-      carriage = PassengerCarriage.new(:passenger)
+    elsif @train.type == :passenger && @train.speed == 0
+      puts("Enter maximum space")
+      space = gets.chomp.to_i
+      carriage = PassengerCarriage.new(space)
       @train.add_carriage(carriage)
     else
       puts "You cannot add carriage while the train is moving"
@@ -137,8 +175,9 @@ class Main
 
   def disconnect_wagons_from_the_train
     if @train.speed == 0
-      carriage = @train.carriages.last
-      @train.remove_carriage(carriage)
+      puts("Enter cart number")
+      number = gets.chomp.to_i
+      @train.remove_carriage(number)
     else
       puts "You cannot remove carriage while the train is moving"
     end
@@ -218,3 +257,4 @@ end
 
 main = Main.new
 main.main_interface
+

@@ -11,15 +11,23 @@ class Train
   @@trains = {}
 
   def initialize(number, type)
-    validate!
     @number = number
     @type = type
-    @carriages = []
+    @carriages = {}
     @speed = 0
     @@trains[number] = self
+    validate!
   end
 
   NUMBER_FORMAT = /([a-z]|\d){3}-?([a-z]|\d){2}$/i
+
+  def each_carriage(block)
+    return unless block_given?
+
+    @carriages.each_pair do |number,carriage|
+      block.call(number,carriage)
+    end
+  end
 
   def validate!
     raise "Number can't be nil" if @number.nil?
@@ -46,14 +54,16 @@ class Train
   end
 
   def add_carriage(carriage)
+    carriage_number ||= 0
     if self.speed == 0 && self.type == carriage.type
-      carriages << carriage
+      carriage_number += 1
+      carriages[carriage_number] = carriage
     end
   end
 
-  def remove_carriage(carriage)
+  def remove_carriage(number)
     if self.speed == 0 && carriages.size != 0
-      carriages.delete(carriage)
+      carriages.delete(number)
     end
   end
 

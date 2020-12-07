@@ -8,10 +8,17 @@ class Station
   end
 
   def initialize(name)
-    validate!
     @name = name
     @trains = []
     @@stations[name] = self
+    validate!
+  end
+
+  def each_train(block)
+    return unless block_given?
+    @trains.each do |train|
+      block.call(train)
+    end
   end
 
   def validate!
