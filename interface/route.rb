@@ -10,16 +10,7 @@ class Route
     validate!
   end
 
-  def validate!
-    raise "Need to add 2 stations" if @stations.size < 2
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
-  end
+  validate @stations, :presence
 
   def add_station(station)
     @stations.insert(-2, station)

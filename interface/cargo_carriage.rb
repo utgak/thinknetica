@@ -1,7 +1,4 @@
 class CargoCarriage < Carriage
-
-  attr_reader :space, :filled_space
-
   def initialize(space)
     @type = :cargo
     @space = space
