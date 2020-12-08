@@ -20,8 +20,8 @@ class Train
     validate!
   end
 
-  validate @number, :presence
-  validate @number, :format, /([a-z]|\d){3}-?([a-z]|\d){2}$/i
+  validate :number, :presence
+  validate :number, :format, /([a-z]|\d){3}-?([a-z]|\d){2}$/i
 
   def each_carriage(block)
     return unless block_given?

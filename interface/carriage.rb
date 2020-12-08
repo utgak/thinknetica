@@ -10,7 +10,7 @@ class Carriage
     validate!
   end
 
-  validate @space, :presence
+  validate :space, :presence
 
   def free_space
     @space - @filled_space

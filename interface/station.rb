@@ -15,7 +15,7 @@ class Station
     validate!
   end
 
-  validate @name, :presence
+  validate :name, :presence
 
   def each_train(block)
     return unless block_given?

@@ -10,7 +10,7 @@ class Route
     validate!
   end
 
-  validate @stations, :presence
+  validate :stations, :presence
 
   def add_station(station)
     @stations.insert(-2, station)

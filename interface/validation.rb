@@ -10,36 +10,25 @@ module Validation
 
     def validate(name, type, option = nil)
       @args ||= []
-      @args << [name, type, option]
+      @args << {:name => name, :type => type, :option => option}
     end
   end
 
   module InstanceMethods
     def validate!
-      (self.class.args.size/3).times do
-        name = self.class.args.delete_at(0)
-        type = self.class.args.delete_at(0)
-        option = self.class.args.delete_at(0)
-
-        case type
-        when :presence
-          presence(name)
-        when :format
-          format(name, option)
-        when :type
-          type(name, option)
-        end
+      args.each do |val|
+        send("validate_#{val[:type]}".to_sym, val[:name], val[:option])
       end
 
-      def type(name, type)
+      def validate_type(name, type)
         raise 'The types do not match' unless name.is_a?(type)
       end
 
-      def presence(name)
+      def validate_presence(name)
         raise "Empty input" if name.nil? or name == ""
       end
 
-      def format(name, format)
+      def validate_format(name, format)
         raise "Number has invalid format" if name !~ format
       end
     end
