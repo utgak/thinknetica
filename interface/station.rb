@@ -2,6 +2,7 @@ class Station
   attr_reader :name
   attr_reader :trains
 
+  include Validation
 
   def self.all
     @@stations
@@ -14,22 +15,13 @@ class Station
     validate!
   end
 
+  validate :name, :presence
+
   def each_train(block)
     return unless block_given?
     @trains.each do |train|
       block.call(train)
     end
-  end
-
-  def validate!
-    raise "Name can't be nil" if @name.nil?
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
   end
 
   def get_train(train)

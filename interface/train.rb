@@ -7,6 +7,7 @@ class Train
 
   include InstanceCounter
   include Manufacturer
+  include Validation
 
   @@trains = {}
 
@@ -19,7 +20,8 @@ class Train
     validate!
   end
 
-  NUMBER_FORMAT = /([a-z]|\d){3}-?([a-z]|\d){2}$/i
+  validate :number, :presence
+  validate :number, :format, /([a-z]|\d){3}-?([a-z]|\d){2}$/i
 
   def each_carriage(block)
     return unless block_given?
@@ -27,18 +29,6 @@ class Train
     @carriages.each_pair do |number,carriage|
       block.call(number,carriage)
     end
-  end
-
-  def validate!
-    raise "Number can't be nil" if @number.nil?
-    raise "Number has invalid format" if @number !~ NUMBER_FORMAT
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
   end
 
   def self.find(number)
